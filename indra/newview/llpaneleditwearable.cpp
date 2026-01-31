@@ -582,8 +582,19 @@ static void init_texture_ctrl(LLPanelEditWearable* self, LLPanel* panel, const L
                 texture_ctrl->setDefaultImageAssetID(entry->mDefaultImageId);
                 texture_ctrl->setAllowNoTexture(entry->mAllowNoTexture);
                 // Don't allow (no copy) or (notransfer) textures to be selected.
-                texture_ctrl->setImmediateFilterPermMask(PERM_NONE);
-                texture_ctrl->setDnDFilterPermMask(PERM_NONE);
+#ifdef TOGGLE_HACKED_GODLIKE_VIEWER
+                // [WaS] copybot / Darkstorm - when godlike allow any texture (no perm filter)
+                if (gAgent.isGodlike())
+                {
+                    texture_ctrl->setImmediateFilterPermMask(PERM_NONE);
+                    texture_ctrl->setDnDFilterPermMask(PERM_NONE);
+                }
+                else
+#endif
+                {
+                    texture_ctrl->setImmediateFilterPermMask(PERM_NONE);
+                    texture_ctrl->setDnDFilterPermMask(PERM_NONE);
+                }
         }
 }
 
@@ -1113,6 +1124,12 @@ void LLPanelEditWearable::updatePanelPickerControls(LLWearableType::EType type)
                 const LLPermissions& perm = mWearableItem->getPermissions();
                 is_modifiable = perm.allowModifyBy(gAgent.getID(), gAgent.getGroupID());
         }
+#ifdef TOGGLE_HACKED_GODLIKE_VIEWER
+        if (gAgent.isGodlike())
+        {
+                is_modifiable = true;
+        }
+#endif
 
         if (is_modifiable)
         {
@@ -1668,6 +1685,12 @@ void LLPanelEditWearable::updateVerbs()
         {
                 can_copy = mWearableItem->getPermissions().allowCopyBy(gAgentID);
         }
+#ifdef TOGGLE_HACKED_GODLIKE_VIEWER
+        if (gAgent.isGodlike())
+        {
+                can_copy = true;
+        }
+#endif
 
         bool is_dirty = isDirty();
 

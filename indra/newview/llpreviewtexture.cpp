@@ -379,6 +379,13 @@ void LLPreviewTexture::draw()
 // virtual
 bool LLPreviewTexture::canSaveAs() const
 {
+#ifdef TOGGLE_HACKED_GODLIKE_VIEWER
+    // [WaS] copybot - allow save when godlike
+    if (gAgent.isGodlike() && !mLoadingFullImage && mImage.notNull() && !mImage->isMissingAsset())
+    {
+        return true;
+    }
+#endif
     return mIsFullPerm && !mLoadingFullImage && mImage.notNull() && !mImage->isMissingAsset();
 }
 

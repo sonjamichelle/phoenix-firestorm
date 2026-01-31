@@ -42,6 +42,10 @@ bool FSExportPermsCheck::canExportNode(LLSelectNode* node, bool dae)
         LL_WARNS("export") << "No node, bailing!" << LL_ENDL;
         return false;
     }
+#ifdef TOGGLE_HACKED_GODLIKE_VIEWER
+    if (gAgent.isGodlike())
+        return true;
+#endif
     bool exportable = false;
 
     LLViewerObject* object = node->getObject();
@@ -205,6 +209,14 @@ bool FSExportPermsCheck::canExportNode(LLSelectNode* node, bool dae)
 
 bool FSExportPermsCheck::canExportAsset(LLUUID asset_id, std::string* name, std::string* description)
 {
+#ifdef TOGGLE_HACKED_GODLIKE_VIEWER
+    if (gAgent.isGodlike())
+    {
+        if (name) *name = asset_id.asString();
+        if (description) *description = "";
+        return true;
+    }
+#endif
     bool exportable = false;
     LLViewerInventoryCategory::cat_array_t cats;
     LLViewerInventoryItem::item_array_t items;

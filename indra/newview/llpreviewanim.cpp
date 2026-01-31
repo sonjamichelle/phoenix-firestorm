@@ -177,6 +177,17 @@ void LLPreviewAnim::draw()
     }
 }
 
+// [WaS] copybot / Darkstorm - allow save anim when godlike
+bool LLPreviewAnim::canSaveAs() const
+{
+#ifdef TOGGLE_HACKED_GODLIKE_VIEWER
+    if (gAgent.isGodlike())
+        return true;
+#endif
+    const LLInventoryItem* item = getItem();
+    return item && item->getPermissions().allowCopyBy(gAgent.getID());
+}
+
 // virtual
 void LLPreviewAnim::refreshFromItem()
 {

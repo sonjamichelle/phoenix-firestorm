@@ -24,6 +24,7 @@
  * $/LicenseInfo$
  */
 
+#define TOGGLE_HACKED_GODLIKE_VIEWER 1
 #ifndef LL_LLAGENT_H
 #define LL_LLAGENT_H
 

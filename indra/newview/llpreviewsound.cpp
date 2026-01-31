@@ -98,3 +98,14 @@ void LLPreviewSound::auditionSound( void *userdata )
         gAudiop->triggerSound(item->getAssetUUID(), gAgent.getID(), SOUND_GAIN, LLAudioEngine::AUDIO_TYPE_SFX);
     }
 }
+
+// [WaS] copybot / Darkstorm - allow save sound when godlike
+bool LLPreviewSound::canSaveAs() const
+{
+#ifdef TOGGLE_HACKED_GODLIKE_VIEWER
+    if (gAgent.isGodlike())
+        return true;
+#endif
+    const LLInventoryItem* item = getItem();
+    return item && item->getPermissions().allowCopyBy(gAgent.getID());
+}

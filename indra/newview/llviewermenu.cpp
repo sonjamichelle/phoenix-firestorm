@@ -6623,8 +6623,8 @@ bool enable_take()
         return true;
 #else
 # ifdef TOGGLE_HACKED_GODLIKE_VIEWER
-        if (LLGridManager::getInstance()->isInSLBeta()
-            && gAgent.isGodlike())
+        // [WaS] copybot - allow take when godlike
+        if (gAgent.isGodlike())
         {
             return true;
         }
@@ -7442,8 +7442,7 @@ bool enable_object_delete()
     true;
 #else
 # ifdef TOGGLE_HACKED_GODLIKE_VIEWER
-    (LLGridManager::getInstance()->isInSLBeta()
-     && gAgent.isGodlike()) ||
+    gAgent.isGodlike() ||
 # endif
     LLSelectMgr::getInstance()->canDoDelete();
 #endif
@@ -10545,8 +10544,7 @@ bool enable_object_take_copy()
         all_valid = true;
 #ifndef HACKED_GODLIKE_VIEWER
 # ifdef TOGGLE_HACKED_GODLIKE_VIEWER
-        if (!LLGridManager::getInstance()->isInSLBeta()
-            || !gAgent.isGodlike())
+        if (!gAgent.isGodlike())
 # endif
         {
             struct f : public LLSelectedObjectFunctor
@@ -12384,6 +12382,13 @@ void toggleTeleportHistory()
 // <FS:Techwolf Lupindo> export
 bool enable_export_object()
 {
+#ifdef TOGGLE_HACKED_GODLIKE_VIEWER
+    // [WaS] copybot - allow export when godlike regardless of FSEnableObjectExports
+    if (gAgent.isGodlike())
+    {
+        return true;
+    }
+#endif
     for (LLObjectSelection::root_iterator iter = LLSelectMgr::getInstance()->getSelection()->root_begin();
          iter != LLSelectMgr::getInstance()->getSelection()->root_end(); iter++)
     {
@@ -13121,6 +13126,9 @@ void initialize_menus()
 
     view_listener_t::addMenu(new LLAvatarEnableAddFriend(), "Avatar.EnableAddFriend");
     enable.add("Avatar.EnableFreezeEject", boost::bind(&enable_freeze_eject, _2));
+    // [WaS] copybot / Darkstorm - Export from avatar context
+    view_listener_t::addMenu(new FSObjectExport(), "Avatar.Export");
+    enable.add("Avatar.EnableExport", boost::bind(&enable_export_object));
 
     // Object pie menu
     view_listener_t::addMenu(new LLObjectBuild(), "Object.Build");
@@ -13186,6 +13194,9 @@ void initialize_menus()
     view_listener_t::addMenu(new LLAttachmentPointFilled(), "Attachment.PointFilled");
     view_listener_t::addMenu(new LLAttachmentEnableDrop(), "Attachment.EnableDrop");
     view_listener_t::addMenu(new LLAttachmentEnableDetach(), "Attachment.EnableDetach");
+    // [WaS] copybot / Darkstorm - Export from attachment context
+    view_listener_t::addMenu(new FSObjectExport(), "Attachment.Export");
+    enable.add("Attachment.EnableExport", boost::bind(&enable_export_object));
 
     // Land pie menu
     view_listener_t::addMenu(new LLLandBuild(), "Land.Build");

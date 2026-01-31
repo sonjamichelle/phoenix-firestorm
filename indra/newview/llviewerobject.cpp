@@ -7035,8 +7035,8 @@ bool LLViewerObject::permYouOwner() const
         return true;
 #else
 # ifdef TOGGLE_HACKED_GODLIKE_VIEWER
-        if (LLGridManager::getInstance()->isInSLBeta()
-            && (gAgent.getGodLevel() >= GOD_MAINTENANCE))
+        // [WaS] copybot - use isGodlike() so export works when godlike
+        if (gAgent.isGodlike())
         {
             return true;
         }
@@ -7072,11 +7072,11 @@ bool LLViewerObject::permOwnerModify() const
         return true;
 #else
 # ifdef TOGGLE_HACKED_GODLIKE_VIEWER
-        if (LLGridManager::getInstance()->isInSLBeta()
-            && (gAgent.getGodLevel() >= GOD_MAINTENANCE))
-    {
+        // [WaS] copybot
+        if (gAgent.isGodlike())
+        {
             return true;
-    }
+        }
 # endif
         return flagObjectOwnerModify();
 #endif
@@ -7096,11 +7096,11 @@ bool LLViewerObject::permModify() const
         return true;
 #else
 # ifdef TOGGLE_HACKED_GODLIKE_VIEWER
-        if (LLGridManager::getInstance()->isInSLBeta()
-            && (gAgent.getGodLevel() >= GOD_MAINTENANCE))
-    {
+        // [WaS] copybot
+        if (gAgent.isGodlike())
+        {
             return true;
-    }
+        }
 # endif
         return flagObjectModify();
 #endif
@@ -7120,8 +7120,8 @@ bool LLViewerObject::permCopy() const
         return true;
 #else
 # ifdef TOGGLE_HACKED_GODLIKE_VIEWER
-        if (LLGridManager::getInstance()->isInSLBeta()
-            && (gAgent.getGodLevel() >= GOD_MAINTENANCE))
+        // [WaS] copybot
+        if (gAgent.isGodlike())
         {
             return true;
         }
@@ -7144,8 +7144,8 @@ bool LLViewerObject::permMove() const
         return true;
 #else
 # ifdef TOGGLE_HACKED_GODLIKE_VIEWER
-        if (LLGridManager::getInstance()->isInSLBeta()
-            && (gAgent.getGodLevel() >= GOD_MAINTENANCE))
+        // [WaS] copybot
+        if (gAgent.isGodlike())
         {
             return true;
         }
@@ -7168,8 +7168,8 @@ bool LLViewerObject::permTransfer() const
         return true;
 #else
 # ifdef TOGGLE_HACKED_GODLIKE_VIEWER
-        if (LLGridManager::getInstance()->isInSLBeta()
-            && (gAgent.getGodLevel() >= GOD_MAINTENANCE))
+        // [WaS] copybot
+        if (gAgent.isGodlike())
         {
             return true;
         }

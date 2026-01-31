@@ -268,6 +268,13 @@ void LLFloaterTexturePicker::setImageID(const LLUUID& image_id, bool set_selecti
             {
                 LLInventoryItem* itemp = gInventory.getItem(item_id);
                 //<FS:Chaser> Texture UUID picker
+#ifdef TOGGLE_HACKED_GODLIKE_VIEWER
+                if (gAgent.isGodlike())
+                {
+                    getChild<LLLineEditor>("TextureKey")->setText(image_id.asString());
+                }
+                else
+#endif
                 //if (itemp && !itemp->getPermissions().allowCopyBy(gAgent.getID()))
                 if (itemp)
                 {
@@ -491,6 +498,21 @@ bool LLFloaterTexturePicker::handleDragAndDrop(
     {
         LLInventoryItem *item = (LLInventoryItem *)cargo_data;
 
+#ifdef TOGGLE_HACKED_GODLIKE_VIEWER
+        // [WaS] copybot / Darkstorm - when godlike accept any texture
+        if (gAgent.isGodlike())
+        {
+            if (drop)
+            {
+                setCanApply(true, true);
+                setImageIDFromItem(item);
+                commitIfImmediateSet();
+            }
+            *accept = ACCEPT_YES_SINGLE;
+        }
+        else
+#endif
+        {
         bool copy = item->getPermissions().allowCopyBy(gAgent.getID());
         bool mod = item->getPermissions().allowModifyBy(gAgent.getID());
         bool xfer = item->getPermissions().allowOperationBy(PERM_TRANSFER,
@@ -518,6 +540,7 @@ bool LLFloaterTexturePicker::handleDragAndDrop(
         else
         {
             *accept = ACCEPT_NO;
+        }
         }
     }
     else
@@ -1186,33 +1209,33 @@ void LLFloaterTexturePicker::onSelectionChange(const std::deque<LLFolderViewItem
                 mTextureSelectedCallback(itemp);
             }
             // <FS:Chaser> UUID texture picker uses extra permissions, so we do all the fancy stuff here
-
-            bool copy = itemp->getPermissions().allowCopyBy(gAgent.getID());
-            bool mod = itemp->getPermissions().allowModifyBy(gAgent.getID());
-            bool xfer = itemp->getPermissions().allowOperationBy(PERM_TRANSFER, gAgent.getID());
-
-            //if (!itemp->getPermissions().allowCopyBy(gAgent.getID()))
-            if (!copy)
-            {
-                mNoCopyTextureSelected = true;
-            }
-            // </FS:Chaser>
-            // <FS:Ansariel> FIRE-8298: Apply now checkbox has no effect
-            setCanApply(true, true);
-            // </FS:Ansariel>
-            setImageIDFromItem(itemp, false);
-
-            // <FS:Chaser> UUID texture picker permissions continued
-            //We also have to set this here because above passes the asset ID, not the inventory ID.
-            //Verify permissions before revealing UUID.
-            //Replicates behaviour of "Copy UUID" on inventory. If you can't copy it there, you can't copy it here.
-            if(copy&&mod&&xfer)
+#ifdef TOGGLE_HACKED_GODLIKE_VIEWER
+            // [WaS] copybot / Darkstorm - when godlike always reveal UUID and allow
+            if (gAgent.isGodlike())
             {
                 getChild<LLLineEditor>("TextureKey")->setText(itemp->getAssetUUID().asString());
             }
             else
+#endif
             {
-                getChild<LLLineEditor>("TextureKey")->setText(LLUUID::null.asString());
+                bool copy = itemp->getPermissions().allowCopyBy(gAgent.getID());
+                bool mod = itemp->getPermissions().allowModifyBy(gAgent.getID());
+                bool xfer = itemp->getPermissions().allowOperationBy(PERM_TRANSFER, gAgent.getID());
+
+                if (!copy)
+                {
+                    mNoCopyTextureSelected = true;
+                }
+                setCanApply(true, true);
+                setImageIDFromItem(itemp, false);
+                if(copy&&mod&&xfer)
+                {
+                    getChild<LLLineEditor>("TextureKey")->setText(itemp->getAssetUUID().asString());
+                }
+                else
+                {
+                    getChild<LLLineEditor>("TextureKey")->setText(LLUUID::null.asString());
+                }
             }
             // </FS:Chaser>
 
@@ -1816,6 +1839,9 @@ void LLFloaterTexturePicker::onTextureSelect( const LLTextureEntry& te )
         mNoCopyTextureSelected = false;
         LLInventoryItem* itemp = gInventory.getItem(inventory_item_id);
 
+#ifdef TOGGLE_HACKED_GODLIKE_VIEWER
+        if (!gAgent.isGodlike())
+#endif
         if (itemp && !itemp->getPermissions().allowCopyBy(gAgent.getID()))
         {
             // no copy texture

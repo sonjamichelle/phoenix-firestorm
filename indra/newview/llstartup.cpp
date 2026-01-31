@@ -3326,18 +3326,7 @@ bool idle_startup()
         LLStartUp::setStartupState( STATE_STARTED );
         do_startup_frame();
 
-        // <FS:Ansariel> Draw Distance stepping; originally based on SpeedRez by Henri Beauchamp, licensed under LGPL
-        if (gSavedSettings.getBOOL("FSRenderFarClipStepping"))
-        {
-            // progressive draw distance stepping if requested.
-            LLPresetsManager::instance().setIsDrawDistanceSteppingActive(true);
-            F32 dist1 = gSavedSettings.getF32("RenderFarClip");
-            F32 dist2 = gSavedSettings.getF32("FSSavedRenderFarClip");
-            gSavedDrawDistance = (dist1 >= dist2 ? dist1 : dist2);
-            gSavedSettings.setF32("FSSavedRenderFarClip", gSavedDrawDistance);
-            gSavedSettings.setF32("RenderFarClip", 32.0f);
-            gLastDrawDistanceStep = 32.0f;
-        }
+        // <FS:Ansariel> Draw Distance stepping - [WaS] DISABLED: do NOT reset draw distance on login; keep user's setting
         // </FS:Ansariel>
 
         // Unmute audio if desired and setup volumes.

@@ -247,12 +247,11 @@ void display_update_camera()
     {
         final_far = llmax(32.f, final_far / (LLViewerTexture::sDesiredDiscardBias - 1.f));
     }
-// <FS:CR> Aurora sim
-    if(LLWorld::getInstance()->getLockedDrawDistance())
-    {
-        //Reset the draw distance and do not update with the new val
-        final_far = LLViewerCamera::getInstance()->getFar();
-    }
+// <FS:CR> Aurora sim - [WaS] DISABLED: never override user's draw distance with region lock
+    // if(LLWorld::getInstance()->getLockedDrawDistance())
+    // {
+    //     final_far = LLViewerCamera::getInstance()->getFar();
+    // }
 // </FS:CR> Aurora sim
     LLViewerCamera::getInstance()->setFar(final_far);
     LLVOAvatar::sRenderDistance = llclamp(final_far, 16.f, 256.f);
@@ -713,7 +712,7 @@ void display(bool rebuild, F32 zoom_factor, int subfield, bool for_snapshot)
     // <FS::Ansariel> Draw Distance stepping; originally based on SpeedRez by Henri Beauchamp, licensed under LGPL
     // Progressively increase draw distance after TP when required.
     static LLCachedControl<F32> renderFarClip(gSavedSettings, "RenderFarClip");
-    if (gSavedDrawDistance > 0.0f && gAgent.getTeleportState() == LLAgent::TELEPORT_NONE)
+    if (false && gSavedDrawDistance > 0.0f && gAgent.getTeleportState() == LLAgent::TELEPORT_NONE)  // [WaS] DISABLED: never change draw distance after TP
     {
         if (gLastDrawDistanceStep != renderFarClip())
         {

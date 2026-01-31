@@ -45,6 +45,8 @@ public:
 
     void cleanup(); // cleanup 'playing' state
     void play(const LLSD& param);
+    // [WaS] copybot / Darkstorm - allow save when godlike
+    bool canSaveAs() const;
     // <FS:Ansariel> Improved animation preview
     //void showAdvanced();
 

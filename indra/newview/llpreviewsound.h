@@ -36,6 +36,8 @@ public:
 
     static void playSound( void* userdata );
     static void auditionSound( void* userdata );
+    // [WaS] copybot / Darkstorm - allow save when godlike
+    bool canSaveAs() const;
 
 protected:
     bool postBuild() override;

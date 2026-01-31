@@ -4812,19 +4812,7 @@ bool LLAgent::teleportCore(bool is_local)
         LL_INFOS("Teleport") << "Non-local, setting teleport state to TELEPORT_START" << LL_ENDL;
         gAgent.setTeleportState( LLAgent::TELEPORT_START );
 
-        // <FS:Ansariel> Draw Distance stepping; originally based on SpeedRez by Henri Beauchamp, licensed under LGPL
-        if (gSavedSettings.getBOOL("FSRenderFarClipStepping"))
-        {
-            LLPresetsManager::instance().setIsDrawDistanceSteppingActive(true);
-            F32 draw_distance = gSavedSettings.getF32("RenderFarClip");
-            if (gSavedDrawDistance < draw_distance)
-            {
-                gSavedDrawDistance = draw_distance;
-            }
-            gSavedSettings.setF32("FSSavedRenderFarClip", gSavedDrawDistance);
-            gSavedSettings.setF32("RenderFarClip", 32.0f);
-            gLastDrawDistanceStep = 32.0f;
-        }
+        // <FS:Ansariel> Draw Distance stepping - [WaS] DISABLED: do NOT reset draw distance on teleport; keep user's setting
         // </FS:Ansariel>
     }
     make_ui_sound("UISndTeleportOut");
