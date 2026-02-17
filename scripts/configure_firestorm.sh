@@ -341,6 +341,16 @@ if [ $TARGET_PLATFORM == "linux" -o $TARGET_PLATFORM == "darwin" ] ; then
 fi
 echo -e "       Logging to $LOG"
 
+# Use bundled build-support/variables if AUTOBUILD_VARIABLES_FILE not set
+if [ -z "$AUTOBUILD_VARIABLES_FILE" ]
+then
+    SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    DEFAULT_VARS="$SCRIPT_DIR/../build-support/variables"
+    if [ -f "$DEFAULT_VARS" ]; then
+        export AUTOBUILD_VARIABLES_FILE="$DEFAULT_VARS"
+    fi
+fi
+
 if [ $TARGET_PLATFORM == "windows" ]
 then
     if [ -z "${AUTOBUILD_VSVER}" ]
@@ -364,6 +374,7 @@ then
     load_vsvars
 fi
 
+# Use bundled build-support/variables if AUTOBUILD_VARIABLES_FILE not set
 if [ -z "$AUTOBUILD_VARIABLES_FILE" ]
 then
     echo "AUTOBUILD_VARIABLES_FILE not set."
@@ -556,9 +567,9 @@ if [ $WANTS_CONFIG -eq $TRUE ] ; then
                 cp -n "${ROOT_DIR}/vscode_template/"* "${ROOT_DIR}/.vscode/"
             fi
         fi
-    elif [ \( $TARGET_PLATFORM == "windows" \) ] ; then
+    elif [ \( "$TARGET_PLATFORM" = "windows" \) ] ; then
         TARGET="${AUTOBUILD_WIN_CMAKE_GEN}"
-        if [ $AUTOBUILD_ADDRSIZE == 32 ]
+        if [ "${AUTOBUILD_ADDRSIZE}" = "32" ]
         then
             CMAKE_ARCH="-A Win32"
         fi

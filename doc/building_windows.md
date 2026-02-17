@@ -129,7 +129,7 @@ If you do not want to install the required Python packages into the default Pyth
   - Autobuild will be installed. **Earlier versions of Autobuild could be made to work by just putting the source files into your path correctly; this is no longer true - Autobuild _must_ be installed as described here.**
   - Open Windows Command Prompt and enter:
     `pip install git+https://github.com/secondlife/autobuild.git#egg=autobuild`
-- Set environment variable AUTOBUILD_VSVER to 170 (170 = Visual Studio 2022).
+- Set environment variable AUTOBUILD_VSVER to the Visual Studio version (e.g. 170 = Visual Studio 2022, 180 = Visual Studio 2026). If unset, autobuild will use the highest installed VS version.
 - Check Autobuild version to be "autobuild 3.8" or higher:
   `autobuild --version`
 
@@ -145,7 +145,8 @@ If you do not want to install the required Python packages into the default Pyth
 
 In order to make it easier to build collections of related packages (such as the viewer and all the library packages that it imports) with the same compilation options, Autobuild expects a file of variable definitions. This can be set using the environmenat variable AUTOBUILD_VARIABLES_FILE.
 
-- Clone the build variables repository: 
+- **Option A (bundled):** This repository includes `build-support/variables`. If you do not set `AUTOBUILD_VARIABLES_FILE`, the configure script will use that file automatically.
+- **Option B (official):** Clone the build variables repository: 
   `git clone https://github.com/FirestormViewer/fs-build-variables.git <path-to-your-variables-file>`
 - Set the environment variable AUTOBUILD_VARIABLES_FILE to
   `<path-to-your-variables-file>\variables`
